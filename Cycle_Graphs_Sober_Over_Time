@@ -1,0 +1,84 @@
+from sage.calculus.calculus import symbolic_sum
+var ('t,M,i,p')
+M=10 #number of rounds you want the robber to survive
+#c=1-t-c #proportion of sober cop moves
+#r--proportion of sober robber moves
+#t--proportion of tipsy moves, changes with distance
+#D--distance between cop and robber when they start
+k=20 #number of nodes in cycle graph
+
+###############################################################################
+# input: k is number of nodes in cycle graph
+# input: p is proportion of sober moves allocated to robber
+# output: transition matrix (including 2 absorbing states)
+###############################################################################
+if k%2==0:
+        n=(k/2)
+else: n=(k-1)/2
+
+def define_P(n,p,t):
+    L=[]
+    for i in range(n+1):
+        L.append([])
+        for j in range(n+1):
+            L[i].append(0)
+    L[0][0]=1
+    L[-1][-1]=1
+    for i in range(1,n):
+        L[i][i+1]=p*(1-t) +t/2 # transition probability to make distance bigger
+        L[i][i-1]=(1-p)*(1-t) + t/2 # transition probability to make distance smaller
+    if k%2==0: #if cycgraph is even
+        L[n][n]= p*(1-t)
+        L[n][n-1]=(1-p)*(1-t)+t
+    else: #if cycle graph is odd
+        L[n][n]=p*(1-t)+t/2
+        L[n][n-1]=(1-p)*(1-t)+t/2
+
+    M=matrix(L)
+    return M
+###################################################################################
+
+####################################################################################
+# input: n is maximum distance between cop and robber before calling off chase
+# input: p is proportion of sober moves allocated to robber
+# output: transition matrix (without absorbing states)
+####################################################################################
+def define_T(n,p,t):
+    P=define_P(n,p,t)
+    T=P.submatrix(1,1,n,n)
+    return T
+####################################################################################
+
+####################################################################################
+# input: n+1 is the number of possible states the game can be in
+# ouptut: n length vector of all ones
+#####################|###############################################################
+def one_vector(n):
+    L=[]
+    for i in range(n):
+        L.append(1)
+    return vector(L)
+####################################################################################
+def position_vector(n,d):
+    L=[]
+    for i in range(n):
+        L.append(0)
+    L[d]=1
+    return vector(L)
+####################################################################################
+
+#P=define_P(n,p,t)
+#print P
+
+
+T=define_T(n,p,t)
+print T
+
+p=0.4
+print 'Loading...'
+x=vector(prod(define_T(n,p,4/(3+m)) for m in range (1,M+1))*one_vector(n))
+y=vector(sum(prod(define_T(n,p,4/(3+m)) for m in range (1,q))for q in range (1,1001))*one_vector(n))
+
+for i in range (0,n):
+    print 'S_'+`M`+'('+`i+1`+')=',x*position_vector(n,i)
+    print 'E('+`i+1`+')=',y*position_vector(n,i)
