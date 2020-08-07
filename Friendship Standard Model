@@ -1,0 +1,29 @@
+var('r,tr,tc,n,c')
+tr=.4 #Probability of a tipsy robber move
+tc=.4 #Probability of a tipsy cop move
+r=.1  #Probability of a sober robber move
+c=.1  #Probability of a sober cop move
+n=2   #Number of triangles
+M=10  #Number of rounds the game lasts
+T=matrix([[r+tc/2+tr/2,c+tc/2,tr/2,0],
+          [tc*((n-1)/n),r+tr/2,0,tc/(2*n)],
+          [r+tr*((n-1)/n),0,tc/2,tr/(2*n)],
+          [0,tc/2,r+tr/2,0]])
+v=vector([1,1,1,1])
+if tr+tc+r+c==1:
+    print
+else:
+    print ERROR
+a=vector([1,0,0,0]) #starting state 2
+b=vector([0,1,0,0]) #starting state 1cc
+c=vector([0,0,1,0]) #starting state 1rc
+d=vector([0,0,0,1]) #starting state 1e
+E=vector((matrix.identity(4)-T).inverse()*v)
+print 'E(2)=',E*a
+print 'E(1cc)=',E*b
+print 'E(1rc)=',E*c
+print 'E(1e)=',E*d
+print 'G_'+`M`+'(2)=',a*T^M*v
+print 'G_'+`M`+'(1cc)=',b*T^M*v
+print 'G_'+`M`+'(1rc)=',c*T^M*v
+print 'G_'+`M`+'(1e)=',d*T^M*v
