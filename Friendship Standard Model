@@ -10,9 +10,7 @@ T=matrix([[r+tc/2+tr/2,c+tc/2,tr/2,0],
           [r+tr*((n-1)/n),0,tc/2,tr/(2*n)],
           [0,tc/2,r+tr/2,0]])
 v=vector([1,1,1,1])
-if tr+tc+r+c==1:
-    print
-else:
+if tr+tc+r+c !=1:
     print ERROR
 a=vector([1,0,0,0]) #starting state 2
 b=vector([0,1,0,0]) #starting state 1cc
