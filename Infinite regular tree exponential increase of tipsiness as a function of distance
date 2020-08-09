@@ -90,7 +90,7 @@ T=define_T(n,p)
 one= one_vector(n) 
 
 print 
-print 's_d is probability of surviving', M, 'rounds starting at distance d.'
+print 'G_d is probability of surviving', M, 'rounds starting at distance d.'
 print 'E_d is expected game length E_d from distance d:'
 
 print 
