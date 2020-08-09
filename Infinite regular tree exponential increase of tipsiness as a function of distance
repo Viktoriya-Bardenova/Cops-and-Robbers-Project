@@ -98,7 +98,7 @@ for d in range(n-1):
     print "starting distance d=", d+1
     e=position_vector(n,d) 
     G_d=e*(T^M)*one
-    print 's_d=', float(s_d)
+    print 'G_d=', float(G_d)
     E_d=e*((1-T).inverse())*one
     print 'E_d=' ,float(E_d)
     print 
