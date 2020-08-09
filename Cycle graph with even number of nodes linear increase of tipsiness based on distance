@@ -1,0 +1,95 @@
+var ('c,t,M,i,p')
+M=20 #number of rounds you want the robber to survive
+#c=1-t-c #proportion of sober cop moves
+#r--proportion of sober robber moves
+#t--proportion of tipsy moves, changes with distance
+#D--distance between cop and robber when they start
+nodes=10#even number of nodes on cycle graph
+n=nodes/2#maximum distance between cop and robber
+p=0.1 #proportion of sober moves allocated to robber
+
+###############################################################################
+# input: n is maximum distance between cop and robber before calling off chase
+# input: p is proportion of sober moves allocated to robber 
+# output: transition matrix (including 2 absorbing states)
+###############################################################################
+def define_P(n,p):
+    L=[]
+    for i in range(n+1):
+        L.append([])
+        for j in range(n+1):
+            L[i].append(0)
+    T=[0]
+    R=[0]
+    C=[0]
+    L[0][0]=1
+    L[-1][-1]=1
+    for D in range(1,n+1):
+        T.append((D-1)/n) #tipsiness based on distance
+        R.append(p*(1-T[D])) #Percentage of sober moves are robber moves as a function of t based on distance
+        C.append(1-T[D]-R[D])
+    print "T=",T
+    print "R=",R
+    print "C=",C
+    for i in range(1,n):
+        L[i][i+1]=R[i]+(T[i]/2) # transition probability to make distance bigger
+        #print "L[",i,"][",i+1,"]=",L[i][i+1]
+        L[i][i-1] = 1-(R[i]+T[i]/2) # transition probability to make distance smaller
+    L[n][n-1]=1-R[n-1]
+    L[n][n]=R[n-1]
+    M=matrix(L)
+    return M
+###################################################################################
+
+####################################################################################
+# input: n is maximum distance between cop and robber before calling off chase
+# input: p is proportion of sober moves allocated to robber 
+# output: transition matrix (without absorbing states)
+####################################################################################
+def define_T(n,p):
+    P=define_P(n,p)
+    T=P.submatrix(1,1,n,n)
+    return T
+####################################################################################
+
+####################################################################################
+# input: n the maximum distance between cop and robber before calling off chase
+# ouptut: n-2 length vector of all ones 
+####################################################################################
+def one_vector(n):
+    L=[]
+    for i in range(n):
+        L.append(1)
+    return vector(L)
+####################################################################################
+
+####################################################################################
+#input: n the maximum distance between cop and robber before calling off chase
+#input: d such that d+1 is starting distance between cop and robber
+####################################################################################
+def position_vector(n,d):
+    L=[]
+    for i in range(n):
+        L.append(0)
+    L[d]=1
+    return vector(L)
+####################################################################################
+
+P=define_P(n,p)
+print P
+print
+
+T=define_T(n,p)
+print T
+print
+
+
+one= one_vector(n) 
+
+for d in range(n):
+    print "starting distance", d+1
+    e=position_vector(n,d) 
+    G_d=e*(T^M)*one
+    print 'G_d=', float(G_d)
+    E_d=e*((1-T).inverse())*one
+    print 'E_d=', float(E_d)
