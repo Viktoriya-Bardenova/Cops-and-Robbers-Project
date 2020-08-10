@@ -1,0 +1,44 @@
+var('r,t,c')
+r=0.4 #Proportion of moves that are sober robber moves.
+c=0.3 #Proportion of moves that are sober cop moves.
+t=0.3 #Proportion of moves that are tipsy moves by either player.
+M=50  #Number of rounds you want the robber to survive.
+v=vector([1,1,1,1,1,1,1,1,1])
+a=vector([1,0,0,0,0,0,0,0,0]) #starting state (3,3)
+b=vector([0,1,0,0,0,0,0,0,0]) #starting state (3,2)
+d=vector([0,0,1,0,0,0,0,0,0]) #starting state (3,1)
+e=vector([0,0,0,1,0,0,0,0,0]) #starting state (3,0)
+f=vector([0,0,0,0,1,0,0,0,0]) #starting state (2,2)
+g=vector([0,0,0,0,0,1,0,0,0]) #starting state (2,1)
+h=vector([0,0,0,0,0,0,1,0,0]) #starting state (2,0)
+i=vector([0,0,0,0,0,0,0,1,0]) #starting state (1,1)
+j=vector([0,0,0,0,0,0,0,0,1]) #starting state (1,0)
+T=matrix([[r+t/2,c+t/2,0,0,0,0,0,0,0],
+          [r+t/4,t/4,t/4,0,c+t/4,0,0,0,0],
+          [0,r+t/4,t/4,t/4,0,c+t/4,0,0,0],
+          [0,0,r+t/2,t/4,0,0,c+t/4,0,0],
+          [0,r+t/2,0,0,0,c+t/2,0,0,0],
+          [0,0,r+t/4,0,t/4,0,t/4,c+t/4,0],
+          [0,0,0,r+t/4,0,t/2,0,0,c+t/4],
+          [0,0,0,0,0,r+t/2,0,0,c+t/2],
+          [0,0,0,0,0,0,r+t/4,t/2,0]])
+G=vector((T^M)*v)
+E=vector((1-T).inverse()*v)
+print 'G_'+`M`+'(3,3)=',G*a
+print 'G_'+`M`+'(3,2)=',G*b
+print 'G_'+`M`+'(3,1)=',G*d
+print 'G_'+`M`+'(3,0)=',G*e
+print 'G_'+`M`+'(2,2)=',G*f
+print 'G_'+`M`+'(2,1)=',G*g
+print 'G_'+`M`+'(2,0)=',G*h
+print 'G_'+`M`+'(1,1)=',G*i
+print 'G_'+`M`+'(1,0)=',G*j
+print 'E(3,3)=',E*a
+print 'E(3,2)=',E*b
+print 'E(3,1)=',E*d
+print 'E(3,0)=',E*e
+print 'E(2,2)=',E*f
+print 'E(2,1)=',E*g
+print 'E(2,0)=',E*h
+print 'E(1,1)=',E*i
+print 'E(1,0)=',E*j
